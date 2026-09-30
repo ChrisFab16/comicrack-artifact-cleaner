@@ -51,7 +51,8 @@ Toggle off or fingerprint change MUST invalidate or bypass stale entries (no mix
 
 - MUST NOT block the UI thread for unbounded inference without feedback.
 - Preferred: async completion with `PendingFilter` then cache publish.
-- Provisional budget documented in [research.md](../research.md) R3; finalize after spike.
+- While `PendingFilter`, the reader UI MUST show non-blocking processing feedback (overlay or status); clear on Ready/Failed/cancel.
+- Provisional budget documented in [research.md](../research.md) R3; finalize after spike (`spike-perf.md`).
 
 ## Registration
 

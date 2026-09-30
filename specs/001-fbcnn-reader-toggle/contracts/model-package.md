@@ -15,6 +15,8 @@
 | `fbcnn_color` | `fbcnn_color.pth` | `fbcnn_color.onnx` | Primary color pages |
 | `fbcnn_gray` | `fbcnn_gray.pth` | `fbcnn_gray.onnx` | Optional gray path |
 
+If `fbcnn_gray` is not shipped, Configure and enable MUST fail closed with a clear message for gray-only pages (or disclose limitation) — see tasks T032b.
+
 Double-JPEG gray variant (`fbcnn_gray_double`) is out of v1 unless spike shows need.
 
 ## Flexible QF mapping

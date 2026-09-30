@@ -42,7 +42,9 @@ Defaults: feature off; no download until user action.
 |-------|----------------|
 | Host filter missing | “This ComicRack build does not support page filters; update fork build …” |
 | Weights missing | “Model not installed; download from Configure or cancel” |
+| Download in progress | Progress UI with **Cancel**; cancel leaves feature off and reading unfiltered |
 | Load/inference fail | Short reason; reading continues unfiltered |
+| Pending filter (page) | Host shows non-blocking processing feedback while `PendingFilter`; clears on Ready/Failed/cancel |
 
 ## Out of scope
 

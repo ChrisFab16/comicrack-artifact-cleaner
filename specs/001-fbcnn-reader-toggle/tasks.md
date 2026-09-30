@@ -56,7 +56,7 @@ specs/001-fbcnn-reader-toggle/
 - [ ] T011 [P] Legal spike: pin FBCNN Apache-2.0 + release asset attribution; decide download-vs-bundle in `specs/001-fbcnn-reader-toggle/spike-legal.md` (update `contracts/model-package.md` if needed)
 - [ ] T012 [host] API spike: sketch `IPageImageFilter` (or equivalent) in `ComicRackCE/ComicRack.Engine/` per `contracts/host-page-image-filter.md`; document registration in `specs/001-fbcnn-reader-toggle/spike-api.md`
 - [ ] T013 Confirm compose order decode → FBCNN → `BitmapAdjustment` (or spike-chosen alternative) in `spike-api.md` / `research.md` amendment
-- [ ] T014 Choose performance policy from spike numbers (async + optional downscale/tile); write provisional budgets into `specs/001-fbcnn-reader-toggle/spike-perf.md` and update `plan.md` Performance Goals if changed
+- [ ] T014 Choose performance policy from spike numbers (async + optional downscale/tile); write **final** p95/feedback budgets into `specs/001-fbcnn-reader-toggle/spike-perf.md` and update `plan.md` Performance Goals (resolves SC-005 provisional ambiguity)
 
 **Checkpoint**: Spikes done — host can toggle a flag affecting display only; ONNX runs offline; packaging decision recorded; API sketch exists
 
@@ -71,8 +71,10 @@ specs/001-fbcnn-reader-toggle/
 ### Implementation for User Story 1
 
 - [ ] T015 [host] [US1] Implement `IPageImageFilter` + ONNX runner stub/service in `ComicRackCE` (e.g. `ComicRack.Engine/.../FbcnnPageImageFilter.cs`) per `contracts/host-page-image-filter.md`
+- [ ] T015b [host] [US1] Add `Microsoft.ML.OnnxRuntime` (and chosen EP) NuGet/package reference to the CE project that hosts the runner; document in fork README that ORT ships with the build (no ad-hoc DLL copy) per constitution IV
 - [ ] T016 [host] [US1] Wire filter into `ImagePool.GetPage` with fingerprint in cache key; ensure disabled path is bitwise/behaviorally stock
 - [ ] T017 [host] [US1] Implement async pending/ready path + cancel on page-turn/toggle-off per `research.md` R3 and `spike-perf.md`
+- [ ] T017b [host] [US1] Surface user-visible processing feedback when `processingStatus=PendingFilter` (reader overlay/status text) per FR-010; clear on Ready/Failed/cancel
 - [ ] T018 [host] [US1] Add per-reader-window `ReaderWindowFilterState` storage on display/session object in ComicRackCE per `data-model.md`
 - [ ] T019 [P] [plugin] [US1] Implement toggle command entry in `ArtifactCleaner/artifact_cleaner.py` (ASCII-safe directives) calling host enable/disable API per `contracts/plugin-toggle-config.md`
 - [ ] T020 [plugin] [US1] On enable failure (no host filter / no weights), show error and keep disabled (no silent no-op)
@@ -92,7 +94,7 @@ specs/001-fbcnn-reader-toggle/
 
 - [ ] T022 [P] [plugin] [US2] Persist `PluginSettings` with `defaultEnabled=false` in `ArtifactCleaner/config.py` (or `config.xml` schema) per `data-model.md`
 - [ ] T023 [host] [US2] Lazy-load ONNX session only on first successful enable (no load at CE startup) in FBCNN runner
-- [ ] T024 [P] [plugin] [US2] Implement weight download-on-enable/Configure with progress UI hook in `ArtifactCleaner/` per `contracts/model-package.md` and `spike-legal.md`
+- [ ] T024 [P] [plugin] [US2] Implement weight download-on-enable/Configure with progress UI **and Cancel** in `ArtifactCleaner/` per `contracts/model-package.md` and `spike-legal.md`; on cancel keep feature off and continue unfiltered reading
 - [ ] T025 [plugin] [US2] Verify sha256 after download before enabling; surface corrupt/missing errors
 - [ ] T026 [US2] Operator validate Scenario B in `validation-results.md`
 
@@ -127,6 +129,7 @@ specs/001-fbcnn-reader-toggle/
 
 - [ ] T031 [P] [plugin] [US4] Implement `ArtifactCleaner/config_script.py` + WinForms (or WebView2) configure UI per `contracts/plugin-toggle-config.md`
 - [ ] T032 [plugin] [US4] Show model status, download action, execution-provider preference, attribution text (Apache-2.0)
+- [ ] T032b [plugin] [US4] Grayscale support: either install/select `fbcnn_gray` ONNX **or** document fail-closed in Configure + enable error when gray pages cannot be filtered (spec edge / research R7)
 - [ ] T033 [plugin] [US4] Ensure Configure reachable after first run (ongoing control); reload settings on next enable
 - [ ] T034 [US4] Operator validate Scenario D in `validation-results.md`
 
@@ -158,8 +161,8 @@ specs/001-fbcnn-reader-toggle/
 - [ ] T039 [P] Update root `README.md` with install, weight download, and non-destructive warning
 - [ ] T040 Run quickstart Scenarios C (perf usability) and E (host missing filter); append `validation-results.md`
 - [ ] T041 Package `.crplugin` via `scripts/package-crplugin.sh` and verify install under ComicRack Scripts path
-- [ ] T042 Run `/speckit-analyze` and resolve CRITICAL/HIGH; keep `analyze-report.md` CRITICAL=0 (SC-007)
-- [ ] T043 [P] Mark completed tasks `[X]` and ensure `specs/001-fbcnn-reader-toggle/feature` docs match shipped behavior
+- [X] T042 Pre-implement `/speckit-analyze` CRITICAL=0 recorded in `specs/001-fbcnn-reader-toggle/analyze-report.md` (SC-007). **Re-run analyze** only if spec/plan/tasks change materially after this gate; do not treat polish-phase analyze as the first gate
+- [ ] T043 [P] Mark completed tasks `[X]` and ensure `specs/001-fbcnn-reader-toggle/` docs (`spec.md`/`plan.md`/`quickstart.md`) match shipped behavior
 
 ---
 
@@ -201,8 +204,10 @@ specs/001-fbcnn-reader-toggle/
 ```text
 # Host track
 T015 IPageImageFilter + ONNX runner
+T015b ORT NuGet + ship-with-build docs
 T016 ImagePool wire + cache key
 T017 async pending/cancel
+T017b processing feedback UI
 T018 per-window state
 
 # Plugin track (after T012 API shape known)
