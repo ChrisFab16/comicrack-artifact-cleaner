@@ -34,8 +34,9 @@ Upstream flexible control uses quality-factor input compatible with FBCNN test s
 
 1. **Preferred**: Download ONNX (or export locally then cache) on first enable / Configure, into plugin/user data directory.
 2. Ship Apache-2.0 LICENSE + NOTICE / attribution in plugin docs.
-3. Verify `sha256` after download before enable succeeds.
-4. Do not store models inside comic library folders.
+3. **Integrity (FR-019)**: Before `InferenceSession` / enable succeeds, verify `sha256` of the on-disk file against the pinned digests above (by recognized filename). Applies to **manual placement and download**. Fail closed on mismatch.
+4. **Path allowlist**: Model paths MUST resolve under an `ArtifactCleaner` directory (plugin Scripts tree or `%AppData%\cYo\ComicRack Community Edition\ArtifactCleaner\`). Reject other locations even if the hash would match.
+5. Do not store models inside comic library folders.
 
 ## Export harness (dev only)
 

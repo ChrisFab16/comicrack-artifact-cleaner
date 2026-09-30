@@ -122,6 +122,7 @@ Optionally, the user (or a documented default) can limit processing to pages tha
 - **FR-016**: Training new weights, batch library-wide archive rewriting, and replacing ComicRack’s global color-adjustment UI are OUT OF SCOPE for v1.
 - **FR-017**: Upstream PRs to `maforget/ComicRackCE` MUST NOT be opened unless the operator explicitly requests them; host work targets the operator’s fork workflow.
 - **FR-018**: Implementation planning MUST schedule pipeline + model spikes before polishing product UI, and MUST confirm weight license/redistribution before bundling.
+- **FR-019**: Before creating an ONNX Runtime session for artifact reduction, the host MUST verify the model file’s SHA-256 digest against the pinned digests for known FBCNN artifacts (`contracts/model-package.md`). Mismatch, unrecognized filename, or disallowed path MUST fail closed (feature stays off; user-visible error). Integrity MUST apply on **every** enable/load — not only after download.
 
 ### Key Entities
 
@@ -142,6 +143,7 @@ Optionally, the user (or a documented default) can limit processing to pages tha
 - **SC-005**: Page navigation remains usable under the documented performance budget after spikes (target refined in plan; operator can finish a multi-page read without an unresponsive UI and without silent freezes longer than the stated feedback policy).
 - **SC-006**: When weights are missing or load fails, the user sees an error within a few seconds of enable attempt and can continue reading unfiltered without restarting the app.
 - **SC-007**: Spec Kit analyze reports CRITICAL=0 before implementation is treated as done; quickstart documents weight install/first enable and the archive-integrity check.
+- **SC-008**: Enabling with a model file whose SHA-256 does not match the pinned digest (or an unrecognized/disallowed path) fails within a few seconds with a clear error; the filter stays off and reading continues unfiltered.
 
 ## Assumptions
 

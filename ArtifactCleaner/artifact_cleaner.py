@@ -10,7 +10,15 @@
 
 from version import PLUGIN_VERSION
 import System
-from System.IO import Path, File
+from System.IO import Path, File, FileStream, FileMode, FileAccess
+from System.Security.Cryptography import SHA256
+
+
+# Pins must match contracts/model-package.md (host FbcnnModelIntegrity is authoritative).
+_PINNED_SHA256 = {
+    "fbcnn_color.onnx": "a2b46206f6e705bc83dbc5641029b982e3d1ae0af1b1369f3792bee42088c9be",
+    "fbcnn_color_manual.onnx": "a6a7d028232f4510d052f520c64e6c76a40e6a29e60ea16549322d80c9a1b206",
+}
 
 
 def _plugin_dir():
@@ -55,6 +63,47 @@ def _host_supports_filter():
         return False
 
 
+def _sha256_hex(path):
+    fs = None
+    sha = None
+    try:
+        fs = FileStream(path, FileMode.Open, FileAccess.Read)
+        sha = SHA256.Create()
+        digest = sha.ComputeHash(fs)
+        parts = []
+        for b in digest:
+            parts.append("{0:x2}".format(int(b) & 0xFF))
+        return "".join(parts)
+    finally:
+        if sha is not None:
+            try:
+                sha.Dispose()
+            except Exception:
+                pass
+        if fs is not None:
+            try:
+                fs.Dispose()
+            except Exception:
+                pass
+
+
+def _verify_model_integrity(path):
+    """Pre-check (T047). Host still verifies. Returns (ok, error_message)."""
+    if not path or not File.Exists(path):
+        return False, "ONNX model file not found"
+    name = Path.GetFileName(path)
+    expected = _PINNED_SHA256.get(name)
+    if not expected:
+        return False, "Unrecognized model file name: {0}".format(name)
+    try:
+        actual = _sha256_hex(path)
+    except Exception as ex:
+        return False, "Could not hash model: {0}".format(ex)
+    if actual.lower() != expected.lower():
+        return False, "Model SHA-256 mismatch (corrupt or untrusted file)"
+    return True, ""
+
+
 def ArtifactCleaner(books):
     """Toggle artifact reduction for the current reader window."""
     try:
@@ -96,6 +145,17 @@ def ArtifactCleaner(books):
             "or AppData/.../ArtifactCleaner/\n\n"
             "Expected:\n{1}"
         ).format(PLUGIN_VERSION, onnx or "(no path)")
+        if MessageBox:
+            MessageBox.Show(msg, "Artifact Cleaner")
+        return
+
+    ok_hash, hash_err = _verify_model_integrity(onnx)
+    if not ok_hash:
+        msg = (
+            "Artifact Cleaner v{0}\n\n"
+            "Model integrity check failed.\n{1}\n\n"
+            "Reading continues unfiltered."
+        ).format(PLUGIN_VERSION, hash_err)
         if MessageBox:
             MessageBox.Show(msg, "Artifact Cleaner")
         return

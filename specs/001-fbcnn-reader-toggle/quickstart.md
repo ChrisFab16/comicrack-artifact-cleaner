@@ -22,14 +22,15 @@ Operator validation after spikes + implement. Sample pages are copyrighted — u
 
 **Pass**: Visual on/off difference + identical archive hash.
 
-## Scenario B — Safe default / failure (P1 / SC-004, SC-006)
+## Scenario B — Safe default / failure (P1 / SC-004, SC-006, SC-008)
 
 1. Fresh plugin settings (or new install); do not enable the feature.
 2. Open a book and turn several pages — no model download dialog; no hung UI from this feature (SC-004).
 3. Remove/rename weights (or use install without weights); attempt enable.
 4. Expect visible error within a few seconds; reading continues unfiltered; app does not require restart (SC-006).
+5. (SC-008) Place a wrong-sized/corrupt file named `fbcnn_color.onnx` under `ArtifactCleaner/weights/`; attempt enable — expect SHA-256 mismatch error; filter stays off.
 
-**Pass**: No surprise download when off; fail-closed enable with continued reading.
+**Pass**: No surprise download when off; fail-closed enable with continued reading; integrity mismatch fails closed.
 
 ## Scenario C — Performance usability (SC-005)
 

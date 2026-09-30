@@ -1,7 +1,7 @@
 # Analyze Report: FBCNN JPEG Artifact Reader Toggle
 
 **Feature**: `specs/001-fbcnn-reader-toggle`  
-**Date**: 2026-09-30  
+**Date**: 2026-09-30 (re-analyze after FR-019 integrity)  
 **Command**: `/speckit-analyze`  
 **Constitution**: `.specify/memory/constitution.md` v1.0.0 (loaded)
 
@@ -11,25 +11,27 @@
 |--------|-------|
 | **CRITICAL** | **0** |
 | HIGH | 0 |
-| MEDIUM (pre-remediation) | 4 (C1–C4) |
-| LOW (pre-remediation) | 3 (C5, D1, A1) |
-| Gate for `/speckit-implement` | **PASS** |
+| MEDIUM | 0 (new) |
+| LOW | 1 (accepted) |
+| Gate for `/speckit-implement` | **PASS** (T045–T047 integrity; T017/T044 remain open for async) |
 
-## Findings and remediations
+## Findings
 
-| ID | Severity | Summary | Remediation |
-|----|----------|---------|-------------|
-| C1 | MEDIUM | Color/gray: no gray path or fail-closed disclosure | **Done**: T032b + `contracts/model-package.md` note |
-| C2 | MEDIUM | Processing feedback UI underspecified | **Done**: T017b + host/plugin contract updates |
-| C3 | MEDIUM | ORT NuGet / ship-with-build missing | **Done**: T015b |
-| C4 | MEDIUM | T042 analyze placed after implement | **Done**: T042 marked complete as pre-implement gate; re-run only if artifacts change |
-| C5 | LOW | Download cancel not explicit | **Done**: T024 includes Cancel → stay off / unfiltered |
-| D1 | LOW | FR-004/FR-005 overlap | **Accepted**: keep both (behavior + measurable hash) |
-| A1 | LOW | SC-005 budget provisional | **Done**: T014 requires final budgets in `spike-perf.md` |
+| ID | Severity | Summary | Status |
+|----|----------|---------|--------|
+| D1 | LOW | FR-004/FR-005 overlap | Accepted |
+| prior C1–C5 | — | Earlier analyze remediations | Still closed |
+| S1 | — | Security review Medium: ONNX load without hash | **Scoped**: FR-019, SC-008, T045–T047, contract Distribution §3–4 |
 
-## Coverage (post-remediation)
+## Coverage
 
-All FR-001–FR-018 and SC-001–SC-007 have task coverage (FR-016 by explicit non-goals; FR-010 via T014/T017/T017b/T040).
+| Requirement | Tasks |
+|-------------|-------|
+| FR-001–FR-018 | Prior coverage unchanged |
+| FR-019 | T045, T046, T047 (+ T025 for download path) |
+| SC-001–SC-007 | Prior |
+| SC-008 | T045–T047 |
+| FR-010 / async | T017, T017b, T044 (open — not blocking integrity implement) |
 
 ## Constitution alignment
 
@@ -37,12 +39,12 @@ All FR-001–FR-018 and SC-001–SC-007 have task coverage (FR-016 by explicit n
 |-----------|--------|
 | I Non-destructive | PASS |
 | II Host filter | PASS |
-| III Safe defaults | PASS |
-| IV Packaging | PASS (T015b) |
-| V Spec-driven | PASS (this report + T042) |
+| III Safe defaults | PASS (fail-closed integrity strengthens) |
+| IV Packaging | PASS |
+| V Spec-driven | PASS |
 
 ## Notes
 
-- Dual-repo host work remains on `ChrisFab16/ComicRackCE`; plugin Spec Kit stays in this repo.
-- Operator validation tasks remain open until live CE runs.
-- Re-analyze if remediations beyond this report change FR/SC/architecture materially.
+- Integrity implement may proceed for T045–T047 while T017/T044 stay open.
+- Do not treat US1 “security-complete” until T045–T046 done; T047 is defense-in-depth.
+- Host SHA-256 is authoritative; plugin pre-check must use the same pins.

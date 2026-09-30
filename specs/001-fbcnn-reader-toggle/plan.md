@@ -24,7 +24,7 @@ Deliver a **non-destructive** reader toggle that runs FBCNN JPEG artifact reduct
 
 **Performance Goals**: Async display with processing feedback; default downscale long edge ≤1024 before infer (see `spike-perf.md`). CPU p95 filtered-ready ≤25 s after downscale (spike-measured); GPU stretch ≤8 s. Cached revisits instant. Hard gate: no silent UI freeze without feedback. Full-res CPU sync page turns are out of budget (~22 s @ ~1K in spike-model).
 
-**Constraints**: Non-destructive (constitution Principle I); default OFF; no model init until first enable/Configure; fail closed with UI; ASCII-safe IronPython; no maforget PR unless operator asks; Apache-2.0 attribution for FBCNN
+**Constraints**: Non-destructive (constitution Principle I); default OFF; no model init until first enable/Configure; fail closed with UI; ASCII-safe IronPython; no maforget PR unless operator asks; Apache-2.0 attribution for FBCNN; **ONNX load gated by pinned SHA-256 + ArtifactCleaner path allowlist (FR-019)**
 
 **Scale/Scope**: v1 = host filter hook + ONNX inference path + per-window toggle plugin + Configure (model status/download + CPU/GPU preference) + blind QF; P2 manual QF slider; P3 JPEG-only scope optional after spikes
 

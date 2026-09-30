@@ -80,8 +80,11 @@ specs/001-fbcnn-reader-toggle/
 - [X] T020 [plugin] [US1] On enable failure (no host filter / no weights), show error and keep disabled (no silent no-op)
 - [ ] T021 [US1] Operator run quickstart Scenario A; record results in `specs/001-fbcnn-reader-toggle/validation-results.md` (include archive hash proof)
 - [ ] T044 [host] [US1] Async filter pipeline: return unfiltered/pending without blocking GetPage; background FBCNN; cache+`RefreshPage` on ready; cancel abandons result (ORT Run still non-abortable mid-call); wire reader overlay for PendingFilter (completes T017+T017b)
+- [X] T045 [host] [US1] [security] Before `InferenceSession`, verify ONNX SHA-256 against pinned digests in `contracts/model-package.md` and reject unrecognized filenames; fail closed with error string (FR-019 / SC-008) in `FbcnnOnnxRunner.TryLoad` (or shared helper)
+- [X] T046 [host] [US1] [security] Allowlist model paths to directories containing `ArtifactCleaner` (plugin Scripts tree or AppData `...\ArtifactCleaner\`); reject other paths even if hash matches (FR-019)
+- [X] T047 [P] [plugin] [US1] [security] Optional pre-check: refuse enable if local file hash ≠ pin (same digests); host remains authoritative
 
-**Checkpoint**: MVP — toggle visibly cleans JPEG pages; off restores; hash unchanged. **Async/feedback (T017/T017b/T044) required before claiming FR-010 / spike-perf budgets met.**
+**Checkpoint**: MVP — toggle visibly cleans JPEG pages; off restores; hash unchanged. **Async/feedback (T017/T017b/T044) required before claiming FR-010 / spike-perf budgets met.** **Integrity (T045–T047) required before treating enable path as security-complete.**
 
 ---
 
@@ -96,7 +99,7 @@ specs/001-fbcnn-reader-toggle/
 - [ ] T022 [P] [plugin] [US2] Persist `PluginSettings` with `defaultEnabled=false` in `ArtifactCleaner/config.py` (or `config.xml` schema) per `data-model.md`
 - [ ] T023 [host] [US2] Lazy-load ONNX session only on first successful enable (no load at CE startup) in FBCNN runner
 - [ ] T024 [P] [plugin] [US2] Implement weight download-on-enable/Configure with progress UI **and Cancel** in `ArtifactCleaner/` per `contracts/model-package.md` and `spike-legal.md`; on cancel keep feature off and continue unfiltered reading
-- [ ] T025 [plugin] [US2] Verify sha256 after download before enabling; surface corrupt/missing errors
+- [ ] T025 [plugin] [US2] After download, verify sha256 before enabling; surface corrupt/missing errors (complements host T045; download path MUST NOT bypass host verify)
 - [ ] T026 [US2] Operator validate Scenario B in `validation-results.md`
 
 **Checkpoint**: Fresh install idle path clean; fail-closed enable
@@ -211,6 +214,9 @@ T017 async pending/cancel          # open — sync MVP until T044
 T017b processing feedback UI       # open — until T044
 T018 per-window state
 T044 async pipeline + overlay      # completes T017/T017b
+T045 host SHA-256 pin verify       # FR-019
+T046 host ArtifactCleaner path allowlist
+T047 plugin pre-check hash (optional)
 
 # Plugin track (after T012 API shape known)
 T019 artifact_cleaner.py toggle
