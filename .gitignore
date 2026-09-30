@@ -1,0 +1,32 @@
+# Built plugin packages
+crplugin/
+*.crplugin
+
+# Runtime / user config
+config.xml
+*.log
+
+# Models / weights (large; download on demand)
+*.pth
+*.onnx
+models/
+weights/
+
+# Local-only test / copyrighted sample pages
+testdata/
+tests/local/
+
+# Python / editor
+__pycache__/
+*.pyc
+*.pyo
+*.tmp
+*.swp
+.venv/
+.idea/
+.vs/
+
+# OS junk
+Thumbs.db
+Desktop.ini
+.DS_Store
