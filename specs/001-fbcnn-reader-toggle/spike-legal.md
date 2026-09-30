@@ -28,4 +28,4 @@ At implement time, pin:
 
 - [X] License identified (Apache-2.0)
 - [X] Download-vs-bundle decision recorded
-- [ ] sha256 pins for release assets (fill when weights first fetched in T009/T024)
+- [X] sha256 pins for release assets (see `spike-model.md` / `contracts/model-package.md`)
