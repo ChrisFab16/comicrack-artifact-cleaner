@@ -51,12 +51,12 @@ specs/001-fbcnn-reader-toggle/
 
 - [X] T007 [host] Pipeline spike: add gated post-process hook in `ComicRackCE/ComicRack.Engine/IO/Cache/ImagePool.cs` (`GetPage`) that can no-op or identity-copy a bitmap behind a settings/dev flag
 - [X] T008 [host] Extend display-cache identity for filter fingerprint (extend `ComicRackCE/ComicRack.Engine/IO/PageKey.cs` or equivalent wrapper) and prove invalidate on flag toggle
-- [ ] T009 [P] [harness] Model spike: export `fbcnn_color.pth` → ONNX in `harness/export_fbcnn_onnx.py`; write notes to `specs/001-fbcnn-reader-toggle/spike-model.md`
-- [ ] T010 [P] [harness] Run latency on gitignored `testdata/` crop + full page (CPU; GPU if available); record ms/VRAM in `spike-model.md`
+- [X] T009 [P] [harness] Model spike: export `fbcnn_color.pth` → ONNX in `harness/export_fbcnn_onnx.py`; write notes to `specs/001-fbcnn-reader-toggle/spike-model.md`
+- [X] T010 [P] [harness] Run latency on gitignored `testdata/` crop + full page (CPU; GPU if available); record ms/VRAM in `spike-model.md`
 - [X] T011 [P] Legal spike: pin FBCNN Apache-2.0 + release asset attribution; decide download-vs-bundle in `specs/001-fbcnn-reader-toggle/spike-legal.md` (update `contracts/model-package.md` if needed)
 - [X] T012 [host] API spike: sketch `IPageImageFilter` (or equivalent) in `ComicRackCE/ComicRack.Engine/` per `contracts/host-page-image-filter.md`; document registration in `specs/001-fbcnn-reader-toggle/spike-api.md`
 - [X] T013 Confirm compose order decode → FBCNN → `BitmapAdjustment` (or spike-chosen alternative) in `spike-api.md` / `research.md` amendment
-- [ ] T014 Choose performance policy from spike numbers (async + optional downscale/tile); write **final** p95/feedback budgets into `specs/001-fbcnn-reader-toggle/spike-perf.md` and update `plan.md` Performance Goals (resolves SC-005 provisional ambiguity)
+- [X] T014 Choose performance policy from spike numbers (async + optional downscale/tile); write **final** p95/feedback budgets into `specs/001-fbcnn-reader-toggle/spike-perf.md` and update `plan.md` Performance Goals (resolves SC-005 provisional ambiguity)
 
 **Checkpoint**: Spikes done — host can toggle a flag affecting display only; ONNX runs offline; packaging decision recorded; API sketch exists
 

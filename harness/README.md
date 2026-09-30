@@ -10,13 +10,23 @@ source .venv/Scripts/activate   # Git Bash on Windows
 pip install -r harness/requirements.txt
 ```
 
+Clone upstream once (gitignored):
+
+```bash
+git clone --depth 1 https://github.com/jiaxi-jiang/FBCNN.git third_party/FBCNN
+```
+
 ## Weights
 
-Download upstream `fbcnn_color.pth` from [FBCNN releases](https://github.com/jiaxi-jiang/FBCNN/releases) into gitignored `weights/` (see root `.gitignore`).
+Download upstream `fbcnn_color.pth` from [FBCNN releases](https://github.com/jiaxi-jiang/FBCNN/releases) into gitignored `weights/`.
 
-## Commands (implemented in spike tasks)
+## Commands
 
-- `python harness/export_fbcnn_onnx.py` — export `.pth` → `.onnx`
-- Latency notes → `specs/001-fbcnn-reader-toggle/spike-model.md`
+```bash
+python harness/export_fbcnn_onnx.py --device cpu
+python harness/bench_fbcnn_onnx.py --height 256 --width 256
+```
+
+Notes → `specs/001-fbcnn-reader-toggle/spike-model.md` / `spike-perf.md`.
 
 Place copyrighted sample crops under gitignored `testdata/`.

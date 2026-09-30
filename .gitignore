@@ -30,3 +30,7 @@ __pycache__/
 Thumbs.db
 Desktop.ini
 .DS_Store
+
+# Vendored upstream clones (local spike only)
+third_party/
+weights/

@@ -13,6 +13,13 @@
 | Id | Source weight (upstream) | Runtime artifact | Use |
 |----|--------------------------|------------------|-----|
 | `fbcnn_color` | `fbcnn_color.pth` | `fbcnn_color.onnx` | Primary color pages |
+
+Pinned sha256 (FBCNN release v1.0 / local export 2026-09-30):
+
+- `fbcnn_color.pth`: `8b0e4ef23d59cf7ac934a342cb31a17619e4fa4a0b3374a9d78c5174312387e8`
+- `fbcnn_color.onnx` (blind): `a2b46206f6e705bc83dbc5641029b982e3d1ae0af1b1369f3792bee42088c9be`
+- `fbcnn_color_manual.onnx`: `a6a7d028232f4510d052f520c64e6c76a40e6a29e60ea16549322d80c9a1b206`
+
 | `fbcnn_gray` | `fbcnn_gray.pth` | `fbcnn_gray.onnx` | Optional gray path |
 
 If `fbcnn_gray` is not shipped, Configure and enable MUST fail closed with a clear message for gray-only pages (or disclose limitation) — see tasks T032b.

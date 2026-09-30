@@ -22,7 +22,7 @@ Deliver a **non-destructive** reader toggle that runs FBCNN JPEG artifact reduct
 
 **Project Type**: Hybrid — CE host engine feature + installable ComicRack plugin package
 
-**Performance Goals**: Provisional (refine after model spike): UI never blocks without feedback; show unfiltered page immediately when enable is on and filtered result is pending; target **p95 filtered ready ≤ 2000 ms** on CPU for a ~2000px-wide page under the chosen downscale/tile policy; cached filtered pages should feel instant on revisit. Hard gate: no silent multi-second freezes.
+**Performance Goals**: Async display with processing feedback; default downscale long edge ≤1024 before infer (see `spike-perf.md`). CPU p95 filtered-ready ≤25 s after downscale (spike-measured); GPU stretch ≤8 s. Cached revisits instant. Hard gate: no silent UI freeze without feedback. Full-res CPU sync page turns are out of budget (~22 s @ ~1K in spike-model).
 
 **Constraints**: Non-destructive (constitution Principle I); default OFF; no model init until first enable/Configure; fail closed with UI; ASCII-safe IronPython; no maforget PR unless operator asks; Apache-2.0 attribution for FBCNN
 
