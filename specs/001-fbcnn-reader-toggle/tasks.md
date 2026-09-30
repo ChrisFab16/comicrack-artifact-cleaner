@@ -34,12 +34,12 @@ specs/001-fbcnn-reader-toggle/
 
 **Purpose**: Plugin + harness scaffolding in this repo; document CE fork workflow
 
-- [ ] T001 Create `ArtifactCleaner/` package tree (`Package.ini`, placeholder entry `.py`, `version.py`) per `plan.md`
-- [ ] T002 [P] Create `harness/` skeleton (`requirements.txt`, README for export/latency) and `tests/` directory
-- [ ] T003 [P] Add root `README.md` describing dual-repo layout (plugin here, host filter in ComicRackCE fork) and non-destructive guarantee
-- [ ] T004 [P] Add `scripts/package-crplugin.sh` (or `.ps1`) to zip `ArtifactCleaner/` as `.crplugin`
-- [ ] T005 [P] Ensure `.gitignore` covers `testdata/`, `*.onnx`, `*.pth`, `models/`, `weights/` (confirm existing entries)
-- [ ] T006 Document CE feature-branch naming for host work in `specs/001-fbcnn-reader-toggle/host-branch.md` (fork-only; no maforget PR)
+- [X] T001 Create `ArtifactCleaner/` package tree (`Package.ini`, placeholder entry `.py`, `version.py`) per `plan.md`
+- [X] T002 [P] Create `harness/` skeleton (`requirements.txt`, README for export/latency) and `tests/` directory
+- [X] T003 [P] Add root `README.md` describing dual-repo layout (plugin here, host filter in ComicRackCE fork) and non-destructive guarantee
+- [X] T004 [P] Add `scripts/package-crplugin.sh` (or `.ps1`) to zip `ArtifactCleaner/` as `.crplugin`
+- [X] T005 [P] Ensure `.gitignore` covers `testdata/`, `*.onnx`, `*.pth`, `models/`, `weights/` (confirm existing entries)
+- [X] T006 Document CE feature-branch naming for host work in `specs/001-fbcnn-reader-toggle/host-branch.md` (fork-only; no maforget PR)
 
 ---
 
@@ -49,13 +49,13 @@ specs/001-fbcnn-reader-toggle/
 
 **CRITICAL**: No US1–US5 product implementation until spike exit criteria in `research.md` R8 are met (or explicitly waived with recorded evidence)
 
-- [ ] T007 [host] Pipeline spike: add gated post-process hook in `ComicRackCE/ComicRack.Engine/IO/Cache/ImagePool.cs` (`GetPage`) that can no-op or identity-copy a bitmap behind a settings/dev flag
-- [ ] T008 [host] Extend display-cache identity for filter fingerprint (extend `ComicRackCE/ComicRack.Engine/IO/PageKey.cs` or equivalent wrapper) and prove invalidate on flag toggle
+- [X] T007 [host] Pipeline spike: add gated post-process hook in `ComicRackCE/ComicRack.Engine/IO/Cache/ImagePool.cs` (`GetPage`) that can no-op or identity-copy a bitmap behind a settings/dev flag
+- [X] T008 [host] Extend display-cache identity for filter fingerprint (extend `ComicRackCE/ComicRack.Engine/IO/PageKey.cs` or equivalent wrapper) and prove invalidate on flag toggle
 - [ ] T009 [P] [harness] Model spike: export `fbcnn_color.pth` → ONNX in `harness/export_fbcnn_onnx.py`; write notes to `specs/001-fbcnn-reader-toggle/spike-model.md`
 - [ ] T010 [P] [harness] Run latency on gitignored `testdata/` crop + full page (CPU; GPU if available); record ms/VRAM in `spike-model.md`
-- [ ] T011 [P] Legal spike: pin FBCNN Apache-2.0 + release asset attribution; decide download-vs-bundle in `specs/001-fbcnn-reader-toggle/spike-legal.md` (update `contracts/model-package.md` if needed)
-- [ ] T012 [host] API spike: sketch `IPageImageFilter` (or equivalent) in `ComicRackCE/ComicRack.Engine/` per `contracts/host-page-image-filter.md`; document registration in `specs/001-fbcnn-reader-toggle/spike-api.md`
-- [ ] T013 Confirm compose order decode → FBCNN → `BitmapAdjustment` (or spike-chosen alternative) in `spike-api.md` / `research.md` amendment
+- [X] T011 [P] Legal spike: pin FBCNN Apache-2.0 + release asset attribution; decide download-vs-bundle in `specs/001-fbcnn-reader-toggle/spike-legal.md` (update `contracts/model-package.md` if needed)
+- [X] T012 [host] API spike: sketch `IPageImageFilter` (or equivalent) in `ComicRackCE/ComicRack.Engine/` per `contracts/host-page-image-filter.md`; document registration in `specs/001-fbcnn-reader-toggle/spike-api.md`
+- [X] T013 Confirm compose order decode → FBCNN → `BitmapAdjustment` (or spike-chosen alternative) in `spike-api.md` / `research.md` amendment
 - [ ] T014 Choose performance policy from spike numbers (async + optional downscale/tile); write **final** p95/feedback budgets into `specs/001-fbcnn-reader-toggle/spike-perf.md` and update `plan.md` Performance Goals (resolves SC-005 provisional ambiguity)
 
 **Checkpoint**: Spikes done — host can toggle a flag affecting display only; ONNX runs offline; packaging decision recorded; API sketch exists
