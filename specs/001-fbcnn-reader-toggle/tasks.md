@@ -73,14 +73,15 @@ specs/001-fbcnn-reader-toggle/
 - [X] T015 [host] [US1] Implement `IPageImageFilter` + ONNX runner stub/service in `ComicRackCE` (e.g. `ComicRack.Engine/.../FbcnnPageImageFilter.cs`) per `contracts/host-page-image-filter.md`
 - [X] T015b [host] [US1] Add `Microsoft.ML.OnnxRuntime` (and chosen EP) NuGet/package reference to the CE project that hosts the runner; document in fork README that ORT ships with the build (no ad-hoc DLL copy) per constitution IV
 - [X] T016 [host] [US1] Wire filter into `ImagePool.GetPage` with fingerprint in cache key; ensure disabled path is bitwise/behaviorally stock
-- [X] T017 [host] [US1] Implement async pending/ready path + cancel on page-turn/toggle-off per `research.md` R3 and `spike-perf.md`
-- [X] T017b [host] [US1] Surface user-visible processing feedback when `processingStatus=PendingFilter` (reader overlay/status text) per FR-010; clear on Ready/Failed/cancel
-- [X] T018 [host] [US1] Add per-reader-window `ReaderWindowFilterState` storage on display/session object in ComicRackCE per `data-model.md`
+- [ ] T017 [host] [US1] Implement async pending/ready path + cancel on page-turn/toggle-off per `research.md` R3 and `spike-perf.md` — **reopened 2026-09-30**: US1 MVP still runs **sync** `Apply` on the GetPage factory (UI hitch). Cancel replaces CTS but cannot abort in-flight ORT `Run`. True async → **T044**
+- [ ] T017b [host] [US1] Surface user-visible processing feedback when `processingStatus=PendingFilter` (reader overlay/status text) per FR-010; clear on Ready/Failed/cancel — **reopened**: `StatusText` exists for plugin MessageBox only; no reader overlay yet (depends on T044 pending state)
+- [X] T018 [host] [US1] Add per-reader-window `ReaderWindowFilterState` storage on display/session object in ComicRackCE per `data-model.md` (window dict + `SetCurrentWindow` in `ComicDisplayControl.GetPageKey`; `ApplyForFingerprint` prefetch-safe)
 - [X] T019 [P] [plugin] [US1] Implement toggle command entry in `ArtifactCleaner/artifact_cleaner.py` (ASCII-safe directives) calling host enable/disable API per `contracts/plugin-toggle-config.md`
 - [X] T020 [plugin] [US1] On enable failure (no host filter / no weights), show error and keep disabled (no silent no-op)
 - [ ] T021 [US1] Operator run quickstart Scenario A; record results in `specs/001-fbcnn-reader-toggle/validation-results.md` (include archive hash proof)
+- [ ] T044 [host] [US1] Async filter pipeline: return unfiltered/pending without blocking GetPage; background FBCNN; cache+`RefreshPage` on ready; cancel abandons result (ORT Run still non-abortable mid-call); wire reader overlay for PendingFilter (completes T017+T017b)
 
-**Checkpoint**: MVP — toggle visibly cleans JPEG pages; off restores; hash unchanged
+**Checkpoint**: MVP — toggle visibly cleans JPEG pages; off restores; hash unchanged. **Async/feedback (T017/T017b/T044) required before claiming FR-010 / spike-perf budgets met.**
 
 ---
 
@@ -206,9 +207,10 @@ specs/001-fbcnn-reader-toggle/
 T015 IPageImageFilter + ONNX runner
 T015b ORT NuGet + ship-with-build docs
 T016 ImagePool wire + cache key
-T017 async pending/cancel
-T017b processing feedback UI
+T017 async pending/cancel          # open — sync MVP until T044
+T017b processing feedback UI       # open — until T044
 T018 per-window state
+T044 async pipeline + overlay      # completes T017/T017b
 
 # Plugin track (after T012 API shape known)
 T019 artifact_cleaner.py toggle
@@ -245,3 +247,4 @@ Host commits stay on `ChrisFab16/ComicRackCE` feature branch; plugin/Spec Kit co
 - Non-destructive (constitution I): no task may add archive rewrite paths
 - Spike evidence files under `specs/001-fbcnn-reader-toggle/spike-*.md` are required exit artifacts for Phase 2
 - Operator tasks (T021, T026, T030, T034, T037, T040) stay open until live CE validation is recorded
+- **2026-09-30 code-review remediation**: P1 ORT serialize + BGR24 convert + `RemoveKeys` (mem+disk) invalidation; P2 per-window ApplyForFingerprint + host quiet fail; P3 ArrayPool CHW + unused import cleanup. T017/T017b reopened; async → T044. Cancel does not abort mid-ORT Run (accepted until T044 abandon-result).

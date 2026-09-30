@@ -26,9 +26,9 @@ git checkout -b 001-fbcnn-reader-toggle
 
 - `IPageImageFilter` (or equivalent) + `ImagePool.GetPage` insert
 - Filter fingerprint in display-cache identity
-- ONNX Runtime runner (`Microsoft.ML.OnnxRuntime`)
+- ONNX Runtime runner (`Microsoft.ML.OnnxRuntime` **1.19.2** NuGet on `ComicRack.Engine` — native ORT DLLs ship with the fork build; no ad-hoc DLL copy)
 - Per-reader-window filter state
-- Processing feedback UI
+- Processing feedback UI (T044 — not yet in sync MVP)
 
 Plugin UI and Spec Kit artifacts stay in `comicrack-artifact-cleaner`.
 

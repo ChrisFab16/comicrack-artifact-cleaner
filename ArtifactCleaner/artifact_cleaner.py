@@ -10,7 +10,7 @@
 
 from version import PLUGIN_VERSION
 import System
-from System.IO import Path, File, Directory
+from System.IO import Path, File
 
 
 def _plugin_dir():
@@ -58,7 +58,7 @@ def _host_supports_filter():
 def ArtifactCleaner(books):
     """Toggle artifact reduction for the current reader window."""
     try:
-        from System.Windows.Forms import MessageBox, MessageBoxButtons, DialogResult
+        from System.Windows.Forms import MessageBox
     except Exception:
         MessageBox = None
 
@@ -101,19 +101,14 @@ def ArtifactCleaner(books):
         return
 
     ok = ComicRack.SetArtifactReductionEnabled(True, onnx)
+    status = ""
+    try:
+        status = ComicRack.ArtifactReductionStatus or ""
+    except Exception:
+        pass
     if ok:
-        status = ""
-        try:
-            status = ComicRack.ArtifactReductionStatus or ""
-        except Exception:
-            pass
         msg = "Artifact reduction ON.\nModel: {0}\n{1}".format(onnx, status)
     else:
-        status = ""
-        try:
-            status = ComicRack.ArtifactReductionStatus or ""
-        except Exception:
-            pass
         msg = (
             "Could not enable artifact reduction.\n{0}\n\n"
             "Reading continues unfiltered."
