@@ -70,14 +70,14 @@ specs/001-fbcnn-reader-toggle/
 
 ### Implementation for User Story 1
 
-- [ ] T015 [host] [US1] Implement `IPageImageFilter` + ONNX runner stub/service in `ComicRackCE` (e.g. `ComicRack.Engine/.../FbcnnPageImageFilter.cs`) per `contracts/host-page-image-filter.md`
-- [ ] T015b [host] [US1] Add `Microsoft.ML.OnnxRuntime` (and chosen EP) NuGet/package reference to the CE project that hosts the runner; document in fork README that ORT ships with the build (no ad-hoc DLL copy) per constitution IV
-- [ ] T016 [host] [US1] Wire filter into `ImagePool.GetPage` with fingerprint in cache key; ensure disabled path is bitwise/behaviorally stock
-- [ ] T017 [host] [US1] Implement async pending/ready path + cancel on page-turn/toggle-off per `research.md` R3 and `spike-perf.md`
-- [ ] T017b [host] [US1] Surface user-visible processing feedback when `processingStatus=PendingFilter` (reader overlay/status text) per FR-010; clear on Ready/Failed/cancel
-- [ ] T018 [host] [US1] Add per-reader-window `ReaderWindowFilterState` storage on display/session object in ComicRackCE per `data-model.md`
-- [ ] T019 [P] [plugin] [US1] Implement toggle command entry in `ArtifactCleaner/artifact_cleaner.py` (ASCII-safe directives) calling host enable/disable API per `contracts/plugin-toggle-config.md`
-- [ ] T020 [plugin] [US1] On enable failure (no host filter / no weights), show error and keep disabled (no silent no-op)
+- [X] T015 [host] [US1] Implement `IPageImageFilter` + ONNX runner stub/service in `ComicRackCE` (e.g. `ComicRack.Engine/.../FbcnnPageImageFilter.cs`) per `contracts/host-page-image-filter.md`
+- [X] T015b [host] [US1] Add `Microsoft.ML.OnnxRuntime` (and chosen EP) NuGet/package reference to the CE project that hosts the runner; document in fork README that ORT ships with the build (no ad-hoc DLL copy) per constitution IV
+- [X] T016 [host] [US1] Wire filter into `ImagePool.GetPage` with fingerprint in cache key; ensure disabled path is bitwise/behaviorally stock
+- [X] T017 [host] [US1] Implement async pending/ready path + cancel on page-turn/toggle-off per `research.md` R3 and `spike-perf.md`
+- [X] T017b [host] [US1] Surface user-visible processing feedback when `processingStatus=PendingFilter` (reader overlay/status text) per FR-010; clear on Ready/Failed/cancel
+- [X] T018 [host] [US1] Add per-reader-window `ReaderWindowFilterState` storage on display/session object in ComicRackCE per `data-model.md`
+- [X] T019 [P] [plugin] [US1] Implement toggle command entry in `ArtifactCleaner/artifact_cleaner.py` (ASCII-safe directives) calling host enable/disable API per `contracts/plugin-toggle-config.md`
+- [X] T020 [plugin] [US1] On enable failure (no host filter / no weights), show error and keep disabled (no silent no-op)
 - [ ] T021 [US1] Operator run quickstart Scenario A; record results in `specs/001-fbcnn-reader-toggle/validation-results.md` (include archive hash proof)
 
 **Checkpoint**: MVP — toggle visibly cleans JPEG pages; off restores; hash unchanged

@@ -22,7 +22,9 @@ Workflow: specify → plan → tasks → **analyze** (CRITICAL=0) → implement.
 
 1. Build package: `bash scripts/package-crplugin.sh`
 2. Copy `crplugin/ArtifactCleaner.crplugin` into ComicRack CE Scripts (or unzip `ArtifactCleaner/` under Scripts)
-3. Use a CE build that includes the host page filter (see `specs/001-fbcnn-reader-toggle/host-branch.md`)
+3. Use a CE build from branch `001-fbcnn-reader-toggle` (host page filter + ORT)
+4. Place `fbcnn_color.onnx` at `Scripts/ArtifactCleaner/weights/fbcnn_color.onnx` (export via `harness/export_fbcnn_onnx.py`)
+5. Automation menu → **Artifact Cleaner (FBCNN)** toggles filter on/off
 
 ## Weights
 
