@@ -33,4 +33,9 @@ Download-on-first-enable (preferred). Large `.onnx` / `.pth` files are gitignore
 ## Development
 
 - Harness (ONNX export/latency): `harness/README.md`
+- **Representative automated tests** (before manual Scenario A):
+  ```bash
+  bash scripts/run-representative-tests.sh
+  ```
+  Plugin: CPython pytest (`tests/`). Host: CE `ComicRack.Tests` FBCNN filter (no IronPython).
 - Operator validation: `specs/001-fbcnn-reader-toggle/quickstart.md`

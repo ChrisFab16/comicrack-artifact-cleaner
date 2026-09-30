@@ -83,8 +83,11 @@ specs/001-fbcnn-reader-toggle/
 - [X] T045 [host] [US1] [security] Before `InferenceSession`, verify ONNX SHA-256 against pinned digests in `contracts/model-package.md` and reject unrecognized filenames; fail closed with error string (FR-019 / SC-008) in `FbcnnOnnxRunner.TryLoad` (or shared helper)
 - [X] T046 [host] [US1] [security] Allowlist model paths to directories containing `ArtifactCleaner` (plugin Scripts tree or AppData `...\ArtifactCleaner\`); reject other paths even if hash matches (FR-019)
 - [X] T047 [P] [plugin] [US1] [security] Optional pre-check: refuse enable if local file hash ≠ pin (same digests); host remains authoritative
+- [X] T048 [P] [plugin] [US1] [test] Automated representative suite: integrity fail-closed + archive SHA unchanged while ORT mutates a page bitmap (`tests/`, `scripts/run-representative-tests.sh`) per FR-020 / SC-009
+- [X] T049 [host] [US1] [test] xUnit coverage in `ComicRack.Tests` for `FbcnnModelIntegrity`, `PageKey.FilterFingerprint`, and optional ORT smoke when weights env/path set
+- [X] T050 [US1] [test] Run T048+T049 green before operator T021; record command + result in `validation-results.md`
 
-**Checkpoint**: MVP — toggle visibly cleans JPEG pages; off restores; hash unchanged. **Async/feedback (T017/T017b/T044) required before claiming FR-010 / spike-perf budgets met.** **Integrity (T045–T047) required before treating enable path as security-complete.**
+**Checkpoint**: MVP — toggle visibly cleans JPEG pages; off restores; hash unchanged. **Async/feedback (T017/T017b/T044) required before claiming FR-010 / spike-perf budgets met.** **Integrity (T045–T047) required before treating enable path as security-complete.** **Automated representative tests (T048–T050) before manual Scenario A.**
 
 ---
 

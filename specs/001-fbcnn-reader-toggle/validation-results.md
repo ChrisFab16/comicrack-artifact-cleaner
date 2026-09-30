@@ -1,25 +1,50 @@
-# Validation results: 001-fbcnn-reader-toggle
+# Validation results — FBCNN reader toggle
 
-## Build
+**Feature**: `001-fbcnn-reader-toggle`  
+**Date**: 2026-09-30
 
-- [X] `dotnet build ComicRack/ComicRack.csproj -c Debug -p:GenerateResourceUsePreserializedResources=true` succeeded (2026-09-30)
-- [X] `Microsoft.ML.OnnxRuntime` 1.19.2 referenced from `ComicRack.Engine`
-- [ ] Operator install of Debug CE + plugin + `fbcnn_color.onnx` under Scripts/ArtifactCleaner/weights/
+## Automated representative suite (T048–T050 / SC-009) — PASS
 
-## US1 — Quickstart Scenario A (T021)
+### Plugin pytest (CPython — no IronPython)
 
-| Check | Result |
-|-------|--------|
-| SC-001 filtered looks cleaner | _pending operator_ |
-| SC-002 off matches stock | _pending operator_ |
-| SC-003 archive hash unchanged | _pending operator_ |
+```bash
+cd comicrack-artifact-cleaner
+python -m pip install -r tests/requirements.txt
+python -m pytest tests/ -v
+```
 
-### Notes
+**Result**: 7 passed (2026-09-30)
 
-- Enable path: Automation → Artifact Cleaner (FBCNN) → host `SetArtifactReductionEnabled`
-- First filtered page may hitch several seconds on CPU (downscale long-edge 1024; sync Apply in ImagePool). Status via page-activity indicator / WaitCursor on enable.
-- True non-blocking swap-in (background + RefreshPage) is a follow-up if hitch is unacceptable.
+| Test | Covers |
+|------|--------|
+| `test_archive_hash_unchanged_while_display_filter_runs` | FR-004/005: ORT mutates page pixels; CBZ hash unchanged |
+| `test_mismatch_model_rejected_before_session` | FR-019: corrupt model ≠ pin |
+| `test_contract_pin_matches_documented_blind_onnx` | Contract pin sync |
+| `test_plugin_pins_match_contract` | Plugin pins sync |
+| `test_weights_file_matches_pin_when_present` | Local weights integrity |
+| `test_corrupt_file_does_not_match_pin` | Negative hash |
+| `test_path_allowlist_shape` | ArtifactCleaner path rule |
 
-## Non-destructive reminder
+### Host xUnit (`ComicRack.Tests`)
 
-Never rewrite CBZ/CBR; only display cache.
+```bash
+export FBCNN_ONNX_PATH=.../comicrack-artifact-cleaner/weights/fbcnn_color.onnx
+cd ComicRackCE
+dotnet test ComicRack.Tests/ComicRack.Tests.csproj -c Debug --filter "FullyQualifiedName~Fbcnn|FullyQualifiedName~PageKeyFilter"
+```
+
+**Result**: 7 passed (2026-09-30)
+
+| Test | Covers |
+|------|--------|
+| `FbcnnModelIntegrityTests.*` | FR-019 allowlist + SHA-256 |
+| `PageKeyFilterFingerprintTests.*` | Cache key on/off |
+| `FbcnnOnnxRunnerSmokeTests.Apply_ChangesPixels_DoesNotRequireArchive` | Host ORT apply without archive |
+
+### Runner script
+
+`scripts/run-representative-tests.sh` — runs both tiers.
+
+## Operator Scenario A (T021) — pending
+
+Automated gate is green. Manual CE UI sign-off (screenshots + live archive hash) still open.
