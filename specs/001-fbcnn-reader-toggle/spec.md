@@ -99,6 +99,8 @@ Optionally, the user (or a documented default) can limit processing to pages tha
 - Multiple reader windows → toggle state is **per reader window** (see Assumptions); enabling in one window MUST NOT force enable in another.
 - Color vs grayscale comics → both MUST be supported for display filtering in v1, or unsupported cases MUST be documented and fail closed with a message.
 - Existing color/brightness/contrast adjustments → when the feature is off, results MUST match today’s adjustment-only path; when on, filtering MUST compose with those adjustments in a documented order (plan decision) without rewriting the archive.
+- Plugin `.py` contains Unicode punctuation (em dash, smart quotes) without a PEP 263 coding cookie on **line 1 or 2** → IronPython raises `Non-ASCII character ... no encoding declared` on Configure/invoke (same failure class as comicwiki / Library Organizer). Cookie on a later line does **not** count.
+- A comment contains `#@Hook` / `#@Name` / other `#@` sequences → CE `PythonPluginInitializer` overwrites directive metadata (`Regex.Match` anywhere on the line); HookType lookup and Available Scripts can break.
 
 ## Requirements *(mandatory)*
 
@@ -118,12 +120,13 @@ Optionally, the user (or a documented default) can limit processing to pages tha
 - **FR-012**: Toggle state MUST apply **per reader window** for v1.
 - **FR-013**: Users MUST be able to use automatic (blind) quality estimation; users SHOULD be able to override with a manual strength/quality control (P2).
 - **FR-014**: Configure (or equivalent) MUST expose ongoing settings when options exist (model/status, download, performance preferences) — not setup-only.
-- **FR-015**: Plugin scripts shipped for ComicRack MUST be ASCII-safe (or declare an explicit encoding) so Configure/hooks do not fail silently on punctuation.
+- **FR-015**: Plugin scripts shipped for ComicRack MUST be **pure ASCII** by default. If any non-ASCII is unavoidable, a PEP 263 coding cookie (`# -*- coding: utf-8 -*-`) MUST be on **line 1 or 2** (prefer line 1, before `#@` directives — comicwiki pattern). A coding comment later in the file does **not** satisfy IronPython 2.7. Comments MUST NOT contain `#@` directive prefixes. Automated tests MUST enforce this for `ArtifactCleaner/*.py`.
 - **FR-016**: Training new weights, batch library-wide archive rewriting, and replacing ComicRack’s global color-adjustment UI are OUT OF SCOPE for v1.
 - **FR-017**: Upstream PRs to `maforget/ComicRackCE` MUST NOT be opened unless the operator explicitly requests them; host work targets the operator’s fork workflow.
 - **FR-018**: Implementation planning MUST schedule pipeline + model spikes before polishing product UI, and MUST confirm weight license/redistribution before bundling.
 - **FR-019**: Before creating an ONNX Runtime session for artifact reduction, the host MUST verify the model file’s SHA-256 digest against the pinned digests for known FBCNN artifacts (`contracts/model-package.md`). Mismatch, unrecognized filename, or disallowed path MUST fail closed (feature stays off; user-visible error). Integrity MUST apply on **every** enable/load — not only after download.
 - **FR-020**: An automated **representative** test suite MUST cover: (a) model integrity fail-closed, (b) display-path inference changes pixels without mutating a comic archive file, (c) cache-key / fingerprint participation for on vs off. Operator Scenario A (T021) remains required for visual UI sign-off but MUST NOT be the first integrity/non-destructive proof.
+- **FR-021**: When enabling artifact reduction, the host ONNX session MUST prefer a **GPU execution provider when available** on Windows (DirectML), and MUST fall back to CPU without failing enable if GPU EP init fails. The active EP MUST be visible in status/Configure text. CUDA-only packaging is out of v1 (DirectML covers NVIDIA/AMD/Intel DX12 devices). Accelerator init still MUST NOT run until first enable (FR-007).
 
 ### Key Entities
 
@@ -146,6 +149,8 @@ Optionally, the user (or a documented default) can limit processing to pages tha
 - **SC-007**: Spec Kit analyze reports CRITICAL=0 before implementation is treated as done; quickstart documents weight install/first enable and the archive-integrity check.
 - **SC-008**: Enabling with a model file whose SHA-256 does not match the pinned digest (or an unrecognized/disallowed path) fails within a few seconds with a clear error; the filter stays off and reading continues unfiltered.
 - **SC-009**: `scripts/run-representative-tests.sh` (plugin pytest + CE `ComicRack.Tests` FBCNN subset) exits 0 on a machine with `weights/fbcnn_color.onnx` present; integrity-negative cases pass without weights.
+- **SC-010**: Plugin pytest includes an ASCII / coding-cookie gate for `ArtifactCleaner/*.py` (FR-015); Configure on the FBCNN host does not raise `Non-ASCII character ... no encoding declared`.
+- **SC-011**: On a machine with a DirectML-capable GPU, enable reports an active EP of DirectML (or equivalent GPU EP name) in status; on CPU-only / DML-fail machines, enable still succeeds on CPU and status reports CPU.
 
 ## Assumptions
 

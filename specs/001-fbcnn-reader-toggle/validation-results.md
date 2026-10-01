@@ -48,3 +48,11 @@ dotnet test ComicRack.Tests/ComicRack.Tests.csproj -c Debug --filter "FullyQuali
 ## Operator Scenario A (T021) — pending
 
 Automated gate is green. Manual CE UI sign-off (screenshots + live archive hash) still open.
+
+## FR-021 DirectML (T057–T059) — 2026-10-01
+
+- Host NuGet: `Microsoft.ML.OnnxRuntime.DirectML` 1.19.2 (replaces CPU-only package)
+- `FbcnnOnnxRunner.TryLoad`: DirectML first, CPU fallback; `ActiveExecutionProvider` exposed
+- Status text: `Artifact reduction on (DirectML|CPU)`; Configure/enable MessageBox shows status
+- Deploy: `%LOCALAPPDATA%\ComicRackCE-FBCNN` with DirectML-flavored `onnxruntime.dll` (~14.3 MB)
+- xUnit Fbcnn filter: **5 passed** after rebuild

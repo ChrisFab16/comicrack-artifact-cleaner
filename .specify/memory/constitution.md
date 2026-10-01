@@ -1,10 +1,10 @@
 <!--
 Sync Impact Report
-- Version change: template → 1.0.0
-- Modified principles: placeholders → FBCNN artifact cleaner principles
-- Added sections: Plugin Constraints, Workflow Expectations
+- Version change: 1.0.0 → 1.1.0
+- Modified principles: II (IronPython ASCII / encoding / #@ directive rules expanded)
+- Added sections: none (Plugin Constraints bullets expanded)
 - Removed sections: none
-- Templates requiring updates: ✅ constitution filled; plan/spec/tasks templates remain generic Spec Kit defaults (compatible)
+- Templates requiring updates: plan/spec/tasks/contracts for FR-015 clarification; AGENTS.md created
 - Follow-up TODOs: none
 -->
 
@@ -28,7 +28,22 @@ that affect page pixels MUST include an explicit host insert point (e.g.
 plugin or settings toggle. Plugin-only workarounds that rewrite files or
 overlay a second viewer MUST be rejected unless a documented spike proves
 otherwise. Plugin scripts MUST use documented ComicRack CE directives and
-hooks; IronPython sources MUST be ASCII-safe (or declare UTF-8 encoding).
+hooks.
+
+**IronPython source rules (CE host, same class of failures as comicwiki /
+Library Organizer):**
+
+1. Prefer **pure ASCII** in all shipped `.py` under `ArtifactCleaner/` (no
+   em dashes, smart quotes, or other Unicode punctuation).
+2. If any non-ASCII is unavoidable, a PEP 263 coding cookie
+   (`# -*- coding: utf-8 -*-`) MUST appear on **line 1 or 2** — IronPython
+   ignores a cookie later in the file (Configure then fails with
+   `Non-ASCII character '\xe2' ... no encoding declared`).
+3. Put the coding cookie on **line 1** (comicwiki pattern), then `#@`
+   directives.
+4. Never put `#@Name` / `#@Hook` / other `#@` sequences in comments: CE’s
+   `PythonPluginInitializer` uses `Regex.Match` (anywhere on the line) and
+   will overwrite metadata.
 
 ### III. Safe Runtime Defaults
 FBCNN MUST NOT run as PyTorch inside IronPython. Preferred path is ONNX
@@ -62,6 +77,9 @@ restores original rendering without touching the archive.
   settings exist — not setup-only.
 - Sample/copyrighted comic pages for validation MUST stay outside the repo
   or under a gitignored `testdata/` path.
+- Automated tests MUST gate FR-015 (ASCII / coding-cookie) for
+  `ArtifactCleaner/*.py` so Configure regressions are caught without a host
+  click-through.
 
 ## Workflow Expectations
 
@@ -83,4 +101,4 @@ implementation. Compliance is checked during `/speckit-analyze` and review
 before release packaging. Principle I (non-destructive display only) is
 non-negotiable for v1 product scope.
 
-**Version**: 1.0.0 | **Ratified**: 2026-09-30 | **Last Amended**: 2026-09-30
+**Version**: 1.1.0 | **Ratified**: 2026-09-30 | **Last Amended**: 2026-10-01

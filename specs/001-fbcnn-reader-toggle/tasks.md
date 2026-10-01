@@ -86,6 +86,15 @@ specs/001-fbcnn-reader-toggle/
 - [X] T048 [P] [plugin] [US1] [test] Automated representative suite: integrity fail-closed + archive SHA unchanged while ORT mutates a page bitmap (`tests/`, `scripts/run-representative-tests.sh`) per FR-020 / SC-009
 - [X] T049 [host] [US1] [test] xUnit coverage in `ComicRack.Tests` for `FbcnnModelIntegrity`, `PageKey.FilterFingerprint`, and optional ORT smoke when weights env/path set
 - [X] T050 [US1] [test] Run T048+T049 green before operator T021; record command + result in `validation-results.md`
+- [X] T051 [host] [US1] Add `#@Hook Reader` + inject into page context menu with `[ON]`/`[OFF]` check state; remove reliance on library Books Automation for toggle
+- [X] T052 [plugin] [US1] Switch toggle to `Reader`; fix Configure (same Key, visible MessageBox, Preferences error surfacing)
+- [X] T053 [host+plugin] [US1] Reader toolbar button invisible RCA: (1) comment containing `#@Hook` overwrote Hook via CE `Regex.Match` anywhere-on-line → HookType lookup failed; (2) toolbar items appended to packed `mainToolStrip` (`HorizontalStackWithOverflow`) → overflow chevron; fix comment, `Overflow=Never`, insert before `tbTools`, harden `GetThemedImage` null Theme
+- [X] T054 [plugin] [US1] IronPython ASCII/encoding remediation (FR-015): pure ASCII `ArtifactCleaner/*.py`; `# -*- coding: utf-8 -*-` on line 1; no `#@` in comments; redeploy AppData Scripts
+- [X] T055 [P] [plugin] [US1] [test] Add `tests/test_ironpython_ascii.py` (SC-010) — fail if non-ASCII without line 1–2 coding cookie; prefer fail on any non-ASCII in shipped plugin sources
+- [X] T056 [docs] Capture FR-015 / `#@` comment trap in constitution II (v1.1.0), contract, repo `AGENTS.md`, and Codesync `AGENTS.md` §35 (+ comicwiki AGENTS cross-link)
+- [X] T057 [host] [US1] Prefer DirectML GPU EP when available; CPU fallback; expose active EP in status (FR-021 / SC-011) — replace NuGet with `Microsoft.ML.OnnxRuntime.DirectML`, update `FbcnnOnnxRunner.TryLoad`
+- [X] T058 [plugin] [US1] Show active execution provider in Configure / enable MessageBox status text
+- [X] T059 [docs] Spec/plan/contract/analyze for FR-021 DirectML; note CUDA toolkit not required for v1
 
 **Checkpoint**: MVP — toggle visibly cleans JPEG pages; off restores; hash unchanged. **Async/feedback (T017/T017b/T044) required before claiming FR-010 / spike-perf budgets met.** **Integrity (T045–T047) required before treating enable path as security-complete.** **Automated representative tests (T048–T050) before manual Scenario A.**
 
@@ -257,3 +266,5 @@ Host commits stay on `ChrisFab16/ComicRackCE` feature branch; plugin/Spec Kit co
 - Spike evidence files under `specs/001-fbcnn-reader-toggle/spike-*.md` are required exit artifacts for Phase 2
 - Operator tasks (T021, T026, T030, T034, T037, T040) stay open until live CE validation is recorded
 - **2026-09-30 code-review remediation**: P1 ORT serialize + BGR24 convert + `RemoveKeys` (mem+disk) invalidation; P2 per-window ApplyForFingerprint + host quiet fail; P3 ArrayPool CHW + unused import cleanup. T017/T017b reopened; async → T044. Cancel does not abort mid-ORT Run (accepted until T044 abandon-result).
+- **2026-09-30 toolbar invisible RCA (T053)**: CE Python initializer matches `#@` anywhere on a line (not only line-start). A docstring comment `(CE #@Hook Reader)` corrupted Hook to `Reader). Host shows…`, so `hookTypes.TryGetValue` missed `Reader` (toggle invoke broken). Separately, `InstallReaderScriptToolbar` appended items onto a width-constrained overflow strip (hidden behind »). Fixed + redeployed FBCNN.
+- **2026-10-01 IronPython ASCII (T054–T056)**: Configure failed with `Non-ASCII character '\xe2'` — em dash in comment + coding cookie on line 8 (IronPython only honors line 1–2). Same class as comicwiki. Constitution II expanded; FR-015/SC-010; `test_ironpython_ascii.py`; AGENTS cross-repo §35.

@@ -44,4 +44,12 @@ Upstream flexible control uses quality-factor input compatible with FBCNN test s
 
 ## Runtime
 
-Host loads ONNX via ONNX Runtime; IronPython MUST NOT load PyTorch.
+Host loads ONNX via ONNX Runtime (`Microsoft.ML.OnnxRuntime.DirectML` on Windows).
+
+**Execution providers (FR-021):**
+
+1. Prefer **DirectML** (`AppendExecutionProvider_DML`) when available (any DX12 GPU).
+2. Fall back to **CPU** if DML append/session create fails — enable MUST still succeed when the model is valid.
+3. Surface active EP in host status / Configure (`DirectML` or `CPU`).
+4. Do not require a separate CUDA toolkit install for v1.
+5. IronPython MUST NOT load PyTorch.

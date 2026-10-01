@@ -10,11 +10,22 @@ Expose user-facing enable/disable (per reader window), optional QF/strength, and
 
 | Surface | Role |
 |---------|------|
-| Reader / Books / menu command (exact hook chosen in implement) | Toggle enable for **current reader window** |
-| `ConfigScript` | Ongoing settings UI (not setup-only) |
-| Optional WebView2 configure | Allowed if host supports `plugin.json` UI; WinForms OK |
+| **`Reader`** (CE page context menu) | Toggle for **current reader window**; host shows `[ON]`/`[OFF]` + checkmark |
+| `ConfigScript` (same `#@Key` as toggle) | Preferences → Plugins → Configure, or Configure… submenu under Reader item |
+| `Books` / library Automation | **Not used** — this feature is reader-only |
 
-Scripts MUST be ASCII-safe or declare UTF-8 encoding (FR-015).
+### IronPython source rules (FR-015 / constitution II)
+
+Same host trap as comicwiki and Library Organizer:
+
+| Rule | Why |
+|------|-----|
+| Prefer **pure ASCII** in shipped `.py` | Unicode punctuation (em dash `\xe2\x80\x94`, smart quotes) → `Non-ASCII character ... no encoding declared` |
+| Coding cookie on **line 1 or 2 only** if non-ASCII needed | IronPython ignores `# -*- coding: utf-8 -*-` on line 8+ |
+| Cookie on **line 1**, then `#@` directives | Matches comicwiki entry scripts |
+| Never put `#@Hook` / `#@Name` / other `#@…` in comments | CE `PythonPluginInitializer` `Regex.Match` matches anywhere on the line and overwrites metadata |
+
+Automated gate: `tests/test_ironpython_ascii.py`.
 
 ## Toggle behavior
 
